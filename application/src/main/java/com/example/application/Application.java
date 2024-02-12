@@ -9,16 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class Application {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(Application.class, args);
 	}
-	@RestController
-	static class HelloWorldController {
 
-		@GetMapping("/")
-		public String helloWorld() {
-			return "Hello World!";
-		}
-	}
 
 }
 
