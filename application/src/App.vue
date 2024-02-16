@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import UsernamePage from '*/components/UsernamePage.vue';
-import ChatPage from '*/components/ChatPage.vue';
+import UsernamePage from '/src/components/UsernamePage.vue';
+import ChatPage from '/src/components/ChatPage.vue';
 
 export default {
   components: {
