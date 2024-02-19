@@ -1,4 +1,4 @@
-package com.example.application.controller;
+package com.example.application.model;
 
 public enum MessageType {
 
