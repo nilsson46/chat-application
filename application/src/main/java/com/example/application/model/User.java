@@ -17,18 +17,18 @@ import java.util.List;
 @Setter
 public class User implements UserDetails {
     @Id
-            @GeneratedValue(strategy = GenerationType.IDENTITY)
-            @Column(name = "id")
-    Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
 
     @Column(name = "username")
-    String username;
+    private String username;
 
     @Column(name = "password")
-    String password;
+    private String password;
 
     @Enumerated(value = EnumType.STRING)
-    Role role;
+    private Role role;
     //SPRING USERDETAILS
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
