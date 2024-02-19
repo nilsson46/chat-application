@@ -106,6 +106,8 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>6.2.1</version> <!-- Replace with the latest version -->
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
