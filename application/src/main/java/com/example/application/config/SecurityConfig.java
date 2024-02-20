@@ -16,8 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher.*;
 
 @Configuration
 @EnableWebSecurity
@@ -36,23 +34,25 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req -> req
-                        .requestMatchers(
-                                new AntPathRequestMatcher("/login/**"),
-                                new AntPathRequestMatcher("/register/**")
-                        ).permitAll() // Tillåt alla att komma åt /login och /register
-                        .anyRequest().authenticated()
-                )
-                .userDetailsService(userDetailsServiceImp)
-                .exceptionHandling(e -> e
-                        .accessDeniedHandler(accessDeniedHandler)
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(
+                        req->req.requestMatchers("/login/**","/register/**","/landing/**").permitAll()
+                                .requestMatchers("/admin_only/**").hasAuthority("ADMIN")
+                                .anyRequest()
+                                .authenticated()
+                ).userDetailsService(userDetailsServiceImp)
+                .sessionManagement(session->session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(
+                        e->e.accessDeniedHandler(
+                                        (request, response, accessDeniedException)->response.setStatus(403)
+                                )
+                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .build();
+
     }
     @Bean
     public PasswordEncoder passwordEncoder(){

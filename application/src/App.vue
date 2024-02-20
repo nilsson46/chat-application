@@ -4,10 +4,8 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'App',
-}
+<script setup lang="js">
+import {RouterView} from 'vue-router'
 </script>
 
 <style>
