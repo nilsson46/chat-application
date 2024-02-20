@@ -1,31 +1,15 @@
 <template>
   <div id="app">
-    <UsernamePage v-if="!username" @set-username="setUsername" />
-    <ChatPage v-else />
+    <router-view /> <!-- Visa router-vy för att hantera olika vägar -->
   </div>
 </template>
 
 <script>
-import UsernamePage from '/src/components/UsernamePage.vue';
-import ChatPage from '/src/components/ChatPage.vue';
-
 export default {
-  components: {
-    UsernamePage,
-    ChatPage
-  },
-  data() {
-    return {
-      username: null
-    };
-  },
-  methods: {
-    setUsername(username) {
-      this.username = username;
-    }
-  }
+  name: 'App',
 }
 </script>
+
 <style>
 /* Global CSS för hela applikationen */
 * {
@@ -49,6 +33,4 @@ body {
   color: #333;
   background-color: #f4f4f4;
 }
-
-
 </style>
