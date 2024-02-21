@@ -1,7 +1,7 @@
 package com.example.application.config;
 
 import com.example.application.controller.ChatMessage;
-import com.example.application.controller.MessageType;
+import com.example.application.model.MessageType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;

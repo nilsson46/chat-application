@@ -10,7 +10,8 @@
   "dependencies": {
     "@vue/cli": "^5.0.8",
     "core-js": "^3.8.3",
-    "vue": "^3.4.19"
+    "vue": "^3.4.19",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -42,5 +43,13 @@
     "not ie 11"
   ],
   "_id": "@",
-  "readme": "ERROR: No README data found!"
+  "readme": "ERROR: No README data found!",
+
+  "babel": {
+    "presets": [
+      "@vue/cli-plugin-babel/preset"
+    ]
+  }
 }
+
+

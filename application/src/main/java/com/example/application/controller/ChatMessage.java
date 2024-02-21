@@ -3,6 +3,7 @@ package com.example.application.controller;
 
 //Should change folder later on.
 
+import com.example.application.model.MessageType;
 import lombok.*;
 
 @Getter
