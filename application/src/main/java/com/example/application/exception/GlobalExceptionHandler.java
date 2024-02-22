@@ -11,4 +11,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleUserAlreadyExistsException(UserAlreadyExistsException exception){
         return ResponseEntity.status(HttpStatus.CONFLICT).body(exception.getMessage());
     }
+
+    @ExceptionHandler(UsernameMissingException.class)
+    public ResponseEntity<String> handleUsernameMissingException(UsernameMissingException exception){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(PasswordMissingException.class)
+    public ResponseEntity<String> PasswordMissingException(PasswordMissingException exception){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    }
 }

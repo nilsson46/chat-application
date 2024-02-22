@@ -1,6 +1,8 @@
 package com.example.application.service;
 
+import com.example.application.exception.PasswordMissingException;
 import com.example.application.exception.UserAlreadyExistsException;
+import com.example.application.exception.UsernameMissingException;
 import com.example.application.model.AuthenticationResponse;
 import com.example.application.model.User;
 import com.example.application.repository.UserRepository;
@@ -28,6 +30,12 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(User request){
+        if(request.getUsername() == null || request.getUsername().isEmpty()){
+            throw new UsernameMissingException("Username is missing");
+        }
+        if(request.getPassword() == null || request.getPassword().isEmpty()){
+            throw new PasswordMissingException("Password is missing");
+        }
         if(userAlreadyExists(request.getUsername())){
             throw new UserAlreadyExistsException("User already exists.");
         }
@@ -46,6 +54,12 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate (User request) {
+        if(request.getUsername() == null || request.getUsername().isEmpty()){
+            throw new UsernameMissingException("Username is missing");
+        }
+        if(request.getPassword() == null || request.getPassword().isEmpty()){
+            throw new PasswordMissingException("Password is missing");
+        }
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
         String token = jwtService.generateToken(user);
