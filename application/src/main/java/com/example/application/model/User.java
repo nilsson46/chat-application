@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 //POJO
-@Table(name ="user")
+@Table(name ="users")
 @Getter
 @Setter
 public class User implements UserDetails {
