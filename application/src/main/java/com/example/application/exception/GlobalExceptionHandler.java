@@ -18,7 +18,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PasswordMissingException.class)
-    public ResponseEntity<String> PasswordMissingException(PasswordMissingException exception){
+    public ResponseEntity<String> handlePasswordMissingException(PasswordMissingException exception){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
-}
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException exception){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    }
+    @ExceptionHandler(TokenInvalidException.class)
+    public ResponseEntity<String> handleTokenInvalidException(TokenInvalidException exception){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
+    }
+ }

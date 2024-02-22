@@ -1,8 +1,6 @@
 package com.example.application.service;
 
-import com.example.application.exception.PasswordMissingException;
-import com.example.application.exception.UserAlreadyExistsException;
-import com.example.application.exception.UsernameMissingException;
+import com.example.application.exception.*;
 import com.example.application.model.AuthenticationResponse;
 import com.example.application.model.User;
 import com.example.application.repository.UserRepository;
@@ -11,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.core.AuthenticationException;
 @Service
 public class AuthenticationService {
 
@@ -60,8 +59,15 @@ public class AuthenticationService {
         if(request.getPassword() == null || request.getPassword().isEmpty()){
             throw new PasswordMissingException("Password is missing");
         }
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        /*try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        } catch (AuthenticationException e) {
+            throw new TokenInvalidException("Invalid or expired token");
+        }    */
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+
         String token = jwtService.generateToken(user);
 
         return new AuthenticationResponse(token);
