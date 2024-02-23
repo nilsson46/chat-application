@@ -18,15 +18,14 @@ private final AuthenticationService authenticationService;
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody User request){
-        return ResponseEntity.ok(authenticationService.register(request));
-    }
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(
-            @RequestBody User request
-    ){
+    public ResponseEntity<?> login(
+            @RequestBody User request){
         return ResponseEntity.ok(authenticationService.authenticate(request));
+    }
+    //TODO add a password check as well?
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody User request){
+        return ResponseEntity.ok(authenticationService.register(request));
     }
 }
