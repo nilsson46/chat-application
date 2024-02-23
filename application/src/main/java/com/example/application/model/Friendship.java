@@ -23,7 +23,8 @@ public class Friendship {
     private User user2;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private FriendshipStatus status;
 
     // Konstruktor, getters och setters
 }

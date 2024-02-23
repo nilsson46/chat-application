@@ -6,10 +6,12 @@ import com.example.application.model.User;
 import com.example.application.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import org.springframework.security.core.AuthenticationException;
 @Service
 public class AuthenticationService {
 
@@ -44,7 +46,7 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(User request) {
         validateUserCredentials(request.getUsername(), request.getPassword());
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("Invalid inputs"));
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         String token = jwtService.generateToken(user);
         return new AuthenticationResponse(token);
@@ -63,5 +65,13 @@ public class AuthenticationService {
         if (password == null || password.isEmpty()) {
             throw new PasswordMissingException("Password is missing");
         }
+    }
+    public String getLoggedInUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
+            return ((UserDetails) authentication.getPrincipal()).getUsername();
+        }
+        // Returnera null om ingen användare är inloggad eller om autentiseringskontexten saknar användardetaljer
+        return null;
     }
 }
