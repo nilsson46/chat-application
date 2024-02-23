@@ -38,6 +38,7 @@ public class FriendshipService {
     }
 
     public void acceptFriendRequest(String otherUsername, String loggedInUsername) {
+
         // Hämta användarobjekt för både den inloggade användaren och den andra användaren
         User loggedInUser = userRepository.findByUsername(loggedInUsername)
                 .orElseThrow(() -> new UserNotFoundException("Logged in user not found"));
@@ -48,6 +49,8 @@ public class FriendshipService {
         // I detta exempel antar vi att vi har en Friendship-entitet som innehåller statusen för vänförfrågan
         Friendship friendship = friendshipRepository.findByUser1AndUser2(loggedInUser, otherUser)
                 .orElseThrow(() -> new UserNotFoundException("Friendship not found"));
+        System.out.println(friendship.getUser1());
+        System.out.println(friendship.getUser2());
 
         // Uppdatera vänförfrågningsstatusen till "accepted" eller liknande
         friendship.setStatus(FriendshipStatus.ACCEPTED);

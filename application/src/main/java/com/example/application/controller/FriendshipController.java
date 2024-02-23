@@ -20,7 +20,7 @@ public class FriendshipController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> sendFriendRequest(@RequestBody String otherUsername){
+    public ResponseEntity<?> sendFriendRequest(@RequestParam String otherUsername){
         String loggedInUsername = authenticationService.getLoggedInUsername();
         if (loggedInUsername == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
@@ -29,7 +29,7 @@ public class FriendshipController {
         return ResponseEntity.ok("Friend request sent successfully");
     }
     @PostMapping("/accept")
-    public ResponseEntity<?> acceptFriendRequest(@RequestBody String otherUsername){
+    public ResponseEntity<?> acceptFriendRequest(@RequestParam String otherUsername){
         String loggedInUsername = authenticationService.getLoggedInUsername();
         if(loggedInUsername == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");

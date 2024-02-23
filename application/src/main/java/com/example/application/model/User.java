@@ -31,7 +31,9 @@ public class User implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "user1")
+    @Column(name="friends")
     private List<Friendship> friendships;
+
     //SPRING USERDETAILS
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
