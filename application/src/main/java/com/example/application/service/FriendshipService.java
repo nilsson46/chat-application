@@ -18,7 +18,7 @@ public class FriendshipService {
     @Autowired
     private UserRepository userRepository;
 
-    public void addFriend(String loggedInUsername, String otherUserName){
+    public void addFriend(String loggedInUsername, String otherUserName) {
 
         User loggedInUser = userRepository.findByUsername(loggedInUsername).
                 orElseThrow(() -> new UserNotFoundException("User with username " + loggedInUsername + "not found"));
@@ -26,15 +26,15 @@ public class FriendshipService {
                 orElseThrow(() -> new UserNotFoundException("User with username " + otherUserName + "not found"));
 
         Friendship friendship = new Friendship();
-        friendship.setUser1(loggedInUser);
-        friendship.setUser2(otherUser);
+        friendship.setSender(loggedInUser);
+        friendship.setReceiver(otherUser);
         friendship.setStatus(FriendshipStatus.PENDING);
         friendshipRepository.save(friendship);
 
     }
 
-    public List<Friendship> getFriendshipsList(User user){
-        return friendshipRepository.findByUser1OrUser2(user, user);
+    public List<Friendship> getFriendshipsList(User user) {
+        return friendshipRepository.findBySenderOrReceiver(user, user);
     }
 
     public void acceptFriendRequest(String otherUsername, String loggedInUsername) {
@@ -47,13 +47,22 @@ public class FriendshipService {
 
         // Uppdatera vänförfrågningsstatusen eller utför andra åtgärder för att acceptera vänförfrågan
         // I detta exempel antar vi att vi har en Friendship-entitet som innehåller statusen för vänförfrågan
-        Friendship friendship = friendshipRepository.findByUser1AndUser2(loggedInUser, otherUser)
+        Friendship friendship = friendshipRepository.findBySenderAndReceiver(loggedInUser, otherUser)
                 .orElseThrow(() -> new UserNotFoundException("Friendship not found"));
-        System.out.println(friendship.getUser1());
-        System.out.println(friendship.getUser2());
+        System.out.println(friendship.getReceiver());
+        System.out.println(friendship.getSender());
 
-        // Uppdatera vänförfrågningsstatusen till "accepted" eller liknande
-        friendship.setStatus(FriendshipStatus.ACCEPTED);
-        friendshipRepository.save(friendship);
+        if (friendship.getStatus() == FriendshipStatus.PENDING && friendship.getReceiver().equals(loggedInUser)) {
+            // Uppdatera vänskapsförfrågningsstatusen till "accepted" eller liknande
+            friendship.setStatus(FriendshipStatus.ACCEPTED);
+            friendshipRepository.save(friendship);
+        } else {
+            // Om förfrågan inte är giltig, kasta ett undantag eller hantera på annat sätt
+            throw new IllegalStateException("Invalid friendship request");
+        }
+
+    /*public List<String> getFriends(User user){
+        List<Friendship> friendships = friendshipRepository.findByUser1AndStatus(user,)
+    } */
     }
 }

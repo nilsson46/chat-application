@@ -15,12 +15,12 @@ public class Friendship {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id_1")
-    private User user1;
+    @JoinColumn(name = "receiver")
+    private User receiver;
 
     @ManyToOne
-    @JoinColumn(name = "user_id_2")
-    private User user2;
+    @JoinColumn(name = "sender")
+    private User sender;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
