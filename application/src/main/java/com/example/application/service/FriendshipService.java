@@ -45,13 +45,11 @@ public class FriendshipService {
         User otherUser = userRepository.findByUsername(otherUsername)
                 .orElseThrow(() -> new UserNotFoundException("Other user not found"));
 
-        // Uppdatera vänförfrågningsstatusen eller utför andra åtgärder för att acceptera vänförfrågan
-        // I detta exempel antar vi att vi har en Friendship-entitet som innehåller statusen för vänförfrågan
-        Friendship friendship = friendshipRepository.findBySenderAndReceiver(loggedInUser, otherUser)
+        // Hämta Friendship-objektet baserat på både avsändaren och mottagaren av vänförfrågan
+        Friendship friendship = friendshipRepository.findBySenderAndReceiver(otherUser, loggedInUser)
                 .orElseThrow(() -> new UserNotFoundException("Friendship not found"));
-        System.out.println(friendship.getReceiver());
-        System.out.println(friendship.getSender());
 
+        // Kontrollera om vänförfrågan är i statusen "PENDING" och om den inloggade användaren är mottagaren av vänförfrågan
         if (friendship.getStatus() == FriendshipStatus.PENDING && friendship.getReceiver().equals(loggedInUser)) {
             // Uppdatera vänskapsförfrågningsstatusen till "accepted" eller liknande
             friendship.setStatus(FriendshipStatus.ACCEPTED);
@@ -60,9 +58,10 @@ public class FriendshipService {
             // Om förfrågan inte är giltig, kasta ett undantag eller hantera på annat sätt
             throw new IllegalStateException("Invalid friendship request");
         }
+    }
 
     /*public List<String> getFriends(User user){
         List<Friendship> friendships = friendshipRepository.findByUser1AndStatus(user,)
     } */
-    }
 }
+
