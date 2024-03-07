@@ -1,11 +1,15 @@
 package com.example.application.controller;
 
+import com.example.application.model.Friendship;
+import com.example.application.model.User;
 import com.example.application.service.AuthenticationService;
 import com.example.application.service.FriendshipService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/friendship")
@@ -36,5 +40,15 @@ public class FriendshipController {
         }
         friendshipService.acceptFriendRequest(otherUsername, loggedInUsername);
         return ResponseEntity.ok("Friend request accepted successfully");
+    }
+
+    @GetMapping("/friends")
+    public ResponseEntity<?> getFriends() {
+        String loggedInUsername = authenticationService.getLoggedInUsername();
+        if (loggedInUsername == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
+        }
+        List<String> currentFriends = friendshipService.getCurrentFriendsUsernames(loggedInUsername);
+        return ResponseEntity.ok(currentFriends);
     }
 }

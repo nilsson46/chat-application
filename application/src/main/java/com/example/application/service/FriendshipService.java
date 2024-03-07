@@ -9,6 +9,7 @@ import com.example.application.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,8 +34,23 @@ public class FriendshipService {
 
     }
 
-    public List<Friendship> getFriendshipsList(User user) {
-        return friendshipRepository.findBySenderOrReceiver(user, user);
+    public List<String> getCurrentFriendsUsernames(String loggedInUsername) {
+        User loggedInUser = userRepository.findByUsername(loggedInUsername)
+                .orElseThrow(() -> new UserNotFoundException("Logged in user not found"));
+
+        List<String> currentFriendsUsernames = new ArrayList<>();
+        List<Friendship> sentFriendRequests = friendshipRepository.findBySenderAndStatus(loggedInUser, FriendshipStatus.ACCEPTED);
+        List<Friendship> receivedFriendRequests = friendshipRepository.findByReceiverAndStatus(loggedInUser, FriendshipStatus.ACCEPTED);
+
+        for (Friendship friendship : sentFriendRequests) {
+            currentFriendsUsernames.add(friendship.getReceiver().getUsername());
+        }
+
+        for (Friendship friendship : receivedFriendRequests) {
+            currentFriendsUsernames.add(friendship.getSender().getUsername());
+        }
+
+        return currentFriendsUsernames;
     }
 
     public void acceptFriendRequest(String otherUsername, String loggedInUsername) {
