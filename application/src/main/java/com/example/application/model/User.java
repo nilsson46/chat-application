@@ -30,8 +30,10 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user1")
+    @OneToMany(mappedBy = "receiver")
+    @Column(name="friends")
     private List<Friendship> friendships;
+
     //SPRING USERDETAILS
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

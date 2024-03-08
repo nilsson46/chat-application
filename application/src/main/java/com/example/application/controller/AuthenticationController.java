@@ -21,6 +21,7 @@ private final AuthenticationService authenticationService;
     @PostMapping("/login")
     public ResponseEntity<?> login(
             @RequestBody User request){
+
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
     //TODO add a password check as well?
