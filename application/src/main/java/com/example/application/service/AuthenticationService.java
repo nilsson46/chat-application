@@ -60,10 +60,10 @@ public class AuthenticationService {
     // Metod för att validera användaruppgifter (användarnamn och lösenord)
     private void validateUserCredentials(String username, String password) {
         if (username == null || username.isEmpty()) {
-            throw new UsernameMissingException("Username is missing");
+            throw new InvalidInputException("Username is missing");
         }
         if (password == null || password.isEmpty()) {
-            throw new PasswordMissingException("Password is missing");
+            throw new InvalidInputException("Password is missing");
         }
     }
     public String getLoggedInUsername() {
