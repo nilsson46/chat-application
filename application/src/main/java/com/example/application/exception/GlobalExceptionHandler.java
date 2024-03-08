@@ -12,13 +12,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(exception.getMessage());
     }
 
-    @ExceptionHandler(UsernameMissingException.class)
-    public ResponseEntity<String> handleUsernameMissingException(UsernameMissingException exception){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
-    }
-
-    @ExceptionHandler(PasswordMissingException.class)
-    public ResponseEntity<String> handlePasswordMissingException(PasswordMissingException exception){
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<String> handleInvalidInputException(InvalidInputException exception){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
     @ExceptionHandler(UserNotFoundException.class)
