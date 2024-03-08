@@ -52,6 +52,24 @@ public class FriendshipService {
 
         return currentFriendsUsernames;
     }
+    public List<String> getFriendRequests(String loggedInUsername) {
+        User loggedInUser = userRepository.findByUsername(loggedInUsername)
+                .orElseThrow(() -> new UserNotFoundException("Logged in user not found"));
+
+        List<String> currentFriendRequests = new ArrayList<>();
+        List<Friendship> sentFriendRequests = friendshipRepository.findBySenderAndStatus(loggedInUser, FriendshipStatus.PENDING);
+        List<Friendship> receivedFriendRequests = friendshipRepository.findByReceiverAndStatus(loggedInUser, FriendshipStatus.PENDING);
+
+        for (Friendship friendship : sentFriendRequests) {
+            currentFriendRequests.add(friendship.getReceiver().getUsername());
+        }
+
+        for (Friendship friendship : receivedFriendRequests) {
+            currentFriendRequests.add(friendship.getSender().getUsername());
+        }
+
+        return currentFriendRequests;
+    }
 
     public void acceptFriendRequest(String otherUsername, String loggedInUsername) {
 
@@ -66,18 +84,39 @@ public class FriendshipService {
                 .orElseThrow(() -> new UserNotFoundException("Friendship not found"));
 
         // Kontrollera om vänförfrågan är i statusen "PENDING" och om den inloggade användaren är mottagaren av vänförfrågan
+        //TODO Ändra if satsen som kastar felet annars kör. Guard class
         if (friendship.getStatus() == FriendshipStatus.PENDING && friendship.getReceiver().equals(loggedInUser)) {
             // Uppdatera vänskapsförfrågningsstatusen till "accepted" eller liknande
             friendship.setStatus(FriendshipStatus.ACCEPTED);
             friendshipRepository.save(friendship);
+
         } else {
             // Om förfrågan inte är giltig, kasta ett undantag eller hantera på annat sätt
             throw new IllegalStateException("Invalid friendship request");
         }
     }
 
-    /*public List<String> getFriends(User user){
-        List<Friendship> friendships = friendshipRepository.findByUser1AndStatus(user,)
-    } */
+    public void declineFriendRequest(String otherUsername, String loggedInUsername) {
+
+        // Hämta användarobjekt för både den inloggade användaren och den andra användaren
+        User loggedInUser = userRepository.findByUsername(loggedInUsername)
+                .orElseThrow(() -> new UserNotFoundException("Logged in user not found"));
+        User otherUser = userRepository.findByUsername(otherUsername)
+                .orElseThrow(() -> new UserNotFoundException("Other user not found"));
+
+        // Hämta Friendship-objektet baserat på både avsändaren och mottagaren av vänförfrågan
+        Friendship friendship = friendshipRepository.findBySenderAndReceiver(otherUser, loggedInUser)
+                .orElseThrow(() -> new UserNotFoundException("Friendship not found"));
+
+        // Kontrollera om vänförfrågan är i statusen "PENDING" och om den inloggade användaren är mottagaren av vänförfrågan
+        if (friendship.getStatus() == FriendshipStatus.PENDING && friendship.getReceiver().equals(loggedInUser)) {
+            // Uppdatera vänskapsförfrågningsstatusen till "accepted" eller liknande
+            friendship.setStatus(FriendshipStatus.DECLINED);
+            friendshipRepository.save(friendship);
+        } else {
+            // Om förfrågan inte är giltig, kasta ett undantag eller hantera på annat sätt
+            throw new IllegalStateException("Invalid friendship request");
+        }
+    }
 }
 

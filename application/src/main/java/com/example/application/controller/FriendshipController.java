@@ -42,6 +42,16 @@ public class FriendshipController {
         return ResponseEntity.ok("Friend request accepted successfully");
     }
 
+    @PostMapping("/decline")
+    public ResponseEntity<?> declineFriendRequest(@RequestParam String otherUsername){
+        String loggedInUsername = authenticationService.getLoggedInUsername();
+        if(loggedInUsername == null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
+        }
+        friendshipService.declineFriendRequest(otherUsername, loggedInUsername);
+        return ResponseEntity.ok("Friend request declined successfully");
+    }
+
     @GetMapping("/friends")
     public ResponseEntity<?> getFriends() {
         String loggedInUsername = authenticationService.getLoggedInUsername();
@@ -50,5 +60,14 @@ public class FriendshipController {
         }
         List<String> currentFriends = friendshipService.getCurrentFriendsUsernames(loggedInUsername);
         return ResponseEntity.ok(currentFriends);
+    }
+    @GetMapping("/friendRequests")
+    public ResponseEntity<?> getFriendRequests() {
+        String loggedInUsername = authenticationService.getLoggedInUsername();
+        if (loggedInUsername == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
+        }
+        List<String> currentFriendRequests = friendshipService.getFriendRequests(loggedInUsername);
+        return ResponseEntity.ok(currentFriendRequests);
     }
 }
