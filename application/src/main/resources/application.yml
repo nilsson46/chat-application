@@ -1,17 +1,20 @@
+
 server:
   port: 9090
 spring:
+  config:
+    location: classpath:/database.yml
   datasource:
     url: jdbc:mysql://localhost:3306/chat_jwt
     username: root
-    password: citronsaft11
+    password: Kaffekopp11!
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update #create-drop
+      ddl-auto: create-drop #update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-    database: mysql
+    database: MySQL
     database-platform: org.hibernate.dialect.MySQL8Dialect
