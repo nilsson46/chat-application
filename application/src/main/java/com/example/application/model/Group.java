@@ -18,11 +18,14 @@ public class Group {
     @JoinColumn(name = "group_owner")
     private User groupOwner;
 
-    @ManyToOne
-    @JoinColumn(name = "group_members")
-    private User groupMembers;
+//    @ManyToOne
+//    @JoinColumn(name = "group_members")
+//    private User groupMembers;
 
     @Column(name = "group_name")
     private String groupName;
-    
+
+    @Column(name = "private_group")
+    private boolean privateGroup;
+
 }
