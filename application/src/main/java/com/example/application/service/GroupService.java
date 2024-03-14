@@ -7,6 +7,9 @@ import com.example.application.repository.GroupRepository;
 import com.example.application.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class GroupService {
@@ -18,21 +21,29 @@ public class GroupService {
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
     }
-
+    @Transactional
     public void createGroup(String loggedInUsername, String groupName, boolean privateGroup) {
     User loggedInUser = userRepository.findByUsername(loggedInUsername).
             orElseThrow(() -> new UserNotFoundException("User with username " + loggedInUsername + "not found"));
         Group group = new Group();
         group.setGroupName(groupName);
-        group.setGroupOwner(loggedInUser);
+        group.setGroupOwner((loggedInUsername));
         group.setPrivateGroup(privateGroup);
 
         groupRepository.save(group);
 
     }
+    @Transactional
+    public void deleteGroup(String loggedInUsername, String groupName) {
+        Group group = groupRepository.findByGroupName(groupName)
+                .orElseThrow(() -> new UserNotFoundException("Group with name " + groupName + " not found"));
 
-    public void deleteGroup() {
-        // delete group
+        if (group.getGroupOwner().equals(loggedInUsername)) {
+            groupRepository.delete(group);
+        } else {
+            throw new UserNotFoundException(
+                    "User with username " + loggedInUsername + " is not the owner of the group");
+        }
     }
 
     public void addMember() {

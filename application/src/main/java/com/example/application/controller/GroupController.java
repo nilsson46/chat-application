@@ -1,5 +1,6 @@
 package com.example.application.controller;
 
+import com.example.application.model.Group;
 import com.example.application.service.AuthenticationService;
 import com.example.application.service.GroupService;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +19,15 @@ public class GroupController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createGroup(@RequestBody String groupName, boolean privateGroup){
-        groupService.createGroup(authenticationService.getLoggedInUsername(), groupName, privateGroup);
+    public ResponseEntity<?> createGroup(@RequestBody Group group){
+        groupService.createGroup(authenticationService.getLoggedInUsername(), group.getGroupName(), group.isPrivateGroup());
         return ResponseEntity.ok("Group created successfully");
     }
 
-    @DeleteMapping("/delete")
-        public void deleteGroup(){
-            // delete group
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteGroup(@RequestBody Group groupName){
+        groupService.deleteGroup(authenticationService.getLoggedInUsername(), groupName.getGroupName());
+        return ResponseEntity.ok("Group deleted successfully");
     }
     //Only in private groups
     @PostMapping("/addMember")
