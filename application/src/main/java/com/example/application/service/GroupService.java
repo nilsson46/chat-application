@@ -1,5 +1,6 @@
 package com.example.application.service;
 
+import com.example.application.exception.UserAlreadyExistsException;
 import com.example.application.exception.UserNotFoundException;
 import com.example.application.model.Group;
 import com.example.application.model.User;
@@ -9,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class GroupService {
@@ -25,6 +26,10 @@ public class GroupService {
     public void createGroup(String loggedInUsername, String groupName, boolean privateGroup) {
     User loggedInUser = userRepository.findByUsername(loggedInUsername).
             orElseThrow(() -> new UserNotFoundException("User with username " + loggedInUsername + "not found"));
+
+    if(groupAlreadyExists(groupName)){
+      throw new UserAlreadyExistsException("Group with name " + groupName + " already exists");
+    }
         Group group = new Group();
         group.setGroupName(groupName);
         group.setGroupOwner((loggedInUsername));
@@ -32,6 +37,10 @@ public class GroupService {
 
         groupRepository.save(group);
 
+    }
+
+    private boolean groupAlreadyExists(String groupName) {
+        return groupRepository.findByGroupName(groupName).isPresent();
     }
     @Transactional
     public void deleteGroup(String loggedInUsername, String groupName) {
@@ -45,7 +54,9 @@ public class GroupService {
                     "User with username " + loggedInUsername + " is not the owner of the group");
         }
     }
-
+    public List<Group> getAllGroups() {
+        return groupRepository.findAll();
+    }
     public void addMember() {
         // add member to group
     }

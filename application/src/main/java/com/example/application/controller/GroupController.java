@@ -24,7 +24,7 @@ public class GroupController {
         return ResponseEntity.ok("Group created successfully");
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> deleteGroup(@RequestBody Group groupName){
         groupService.deleteGroup(authenticationService.getLoggedInUsername(), groupName.getGroupName());
         return ResponseEntity.ok("Group deleted successfully");
