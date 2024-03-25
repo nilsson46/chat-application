@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GroupService {
@@ -83,7 +84,9 @@ public class GroupService {
         // leave group
     }
 
-    public List<Group> getAllGroups() {
-        return groupRepository.findAll();
+    public List<String> getAllGroups() {
+        return groupRepository.findAll().stream()
+                .map(Group::getGroupName)
+                .collect(Collectors.toList());
     }
 }
