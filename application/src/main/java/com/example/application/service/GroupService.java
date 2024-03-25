@@ -79,12 +79,19 @@ public class GroupService {
         group.getMembers().add(user);
         groupRepository.save(group);
     }
-
-    public void leaveGroup() {
-        // leave group
+    @Transactional
+    public void leaveGroup(String loggedInUsername, String groupName){
+        Group group = groupRepository.findByGroupName(groupName)
+                .orElseThrow(() -> new UserNotFoundException("Group with name " + groupName + " not found"));
+        User user = userRepository.findByUsername(loggedInUsername)
+                .orElseThrow(() -> new UserNotFoundException("User with username " + loggedInUsername + " not found"));
+        group.getMembers().remove(user);
+        groupRepository.save(group);
     }
 
     public List<String> getAllGroups() {
+
+        //TODO Maybe add more info? Amount of members? Owner? Private or public?
         return groupRepository.findAll().stream()
                 .map(Group::getGroupName)
                 .collect(Collectors.toList());

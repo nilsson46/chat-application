@@ -60,8 +60,9 @@ public class GroupController {
     }
 
     @DeleteMapping("/leave")
-    public void leaveGroup(){
-        // leave group
+    public ResponseEntity<?> leaveGroup(@RequestBody Group group){
+        groupService.leaveGroup(authenticationService.getLoggedInUsername(), group.getGroupName());
+        return ResponseEntity.ok(authenticationService.getLoggedInUsername() +" left group "+ group.getGroupName());
     }
 
     @GetMapping("/members")
