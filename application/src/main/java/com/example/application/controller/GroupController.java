@@ -6,6 +6,8 @@ import com.example.application.service.GroupService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/group")
 public class GroupController {
@@ -52,8 +54,9 @@ public class GroupController {
     }
 
     @PostMapping("/join")
-    public void joinGroup(){
-        // join group
+    public ResponseEntity<?> joinGroup(@RequestBody Group group){
+        groupService.joinGroup(authenticationService.getLoggedInUsername(), group.getGroupName());
+        return ResponseEntity.ok(authenticationService.getLoggedInUsername() +" joined group "+ group.getGroupName());
     }
 
     @DeleteMapping("/leave")
@@ -71,6 +74,10 @@ public class GroupController {
         // get admins of group
     }
 
+    @GetMapping("/groups")
+    public ResponseEntity<?> getAllgroups(){
+    return ResponseEntity.ok(groupService.getAllGroups());
+    }
 }
 
 

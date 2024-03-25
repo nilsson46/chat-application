@@ -54,9 +54,6 @@ public class GroupService {
                     "User with username " + loggedInUsername + " is not the owner of the group");
         }
     }
-    public List<Group> getAllGroups() {
-        return groupRepository.findAll();
-    }
     public void addMember() {
         // add member to group
     }
@@ -72,16 +69,21 @@ public class GroupService {
     public void removeAdmin() {
         // remove admin from group
     }
-
-    public void joinGroup() {
-        // join group
+    @Transactional
+    public void joinGroup(String loggedInUsername, String groupName) {
+        Group group = groupRepository.findByGroupName(groupName)
+                .orElseThrow(() -> new UserNotFoundException("Group with name " + groupName + " not found"));
+        User user = userRepository.findByUsername(loggedInUsername)
+                .orElseThrow(() -> new UserNotFoundException("User with username " + loggedInUsername + " not found"));
+        group.getMembers().add(user);
+        groupRepository.save(group);
     }
 
     public void leaveGroup() {
         // leave group
     }
 
-    public void getMembers() {
-        // get members
+    public List<Group> getAllGroups() {
+        return groupRepository.findAll();
     }
 }

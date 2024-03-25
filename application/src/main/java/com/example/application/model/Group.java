@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "`group`")
 @Getter
@@ -18,9 +20,13 @@ public class Group {
     @Column(name = "group_owner")
     private String groupOwner;
 
-//    @ManyToOne
-//    @JoinColumn(name = "group_members")
-//    private User groupMembers;
+    @ManyToMany
+    @JoinTable(
+            name = "group_members",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> groupMembers;
 
     @Column(name = "group_name")
     private String groupName;
@@ -28,4 +34,7 @@ public class Group {
     @Column(name = "private_group")
     private boolean privateGroup;
 
+    public List<User> getMembers() {
+        return groupMembers;
+    }
 }
