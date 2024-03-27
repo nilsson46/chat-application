@@ -56,11 +56,9 @@ public class GroupService {
         }
     }
     public void addMember() {
-        // add member to group
     }
 
     public void removeMember() {
-        // remove member from group
     }
 
     public void addAdmin() {
