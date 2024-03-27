@@ -1,0 +1,10 @@
+version: '2.3'
+services:
+  db_mysql:
+    image: mysql:8.1.0
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: chat_jwt
+      MYSQL_ROOT_PASSWORD: 12345

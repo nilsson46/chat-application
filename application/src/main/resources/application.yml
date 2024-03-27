@@ -4,11 +4,11 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/chat_jwt
     username: root
-    password: citronsaft11
+    password: 12345
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update #create-drop
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
