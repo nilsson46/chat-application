@@ -28,6 +28,26 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    //Optional so no checker needed
+    @Column(name = "age")
+    private Integer age;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "country")
+    private String country;
+
+    @Column(name = "zip")
+    private Integer zip;
+
+    //TODO Not optional but not a checker yet!
+    @Column(name = "email")
+    private String email;
+
     @Enumerated(value = EnumType.STRING)
     private Role role;
 

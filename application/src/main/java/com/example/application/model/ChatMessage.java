@@ -1,4 +1,4 @@
-package com.example.application.controller;
+package com.example.application.model;
 
 
 //Should change folder later on.
