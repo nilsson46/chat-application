@@ -4,6 +4,7 @@ import com.example.application.model.Friendship;
 import com.example.application.model.User;
 import com.example.application.service.AuthenticationService;
 import com.example.application.service.FriendshipService;
+import com.example.application.service.SearchService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,10 +18,12 @@ public class FriendshipController {
 
     private final AuthenticationService authenticationService;
     private final FriendshipService friendshipService;
+    private final SearchService searchService;
 
-    public FriendshipController(AuthenticationService authenticationService, FriendshipService friendshipService) {
+    public FriendshipController(AuthenticationService authenticationService, FriendshipService friendshipService, SearchService searchService) {
         this.authenticationService = authenticationService;
         this.friendshipService = friendshipService;
+        this.searchService = searchService;
     }
 
     @PostMapping("/add")
@@ -69,5 +72,11 @@ public class FriendshipController {
         }
         List<String> currentFriendRequests = friendshipService.getFriendRequests(loggedInUsername);
         return ResponseEntity.ok(currentFriendRequests);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchUsers(@RequestParam String keyword){
+        List<User> users = searchService.searchUsers(keyword);
+        return ResponseEntity.ok(users);
     }
 }
