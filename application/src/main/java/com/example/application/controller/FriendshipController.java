@@ -76,7 +76,7 @@ public class FriendshipController {
 
     @GetMapping("/search")
     public ResponseEntity<?> searchUsers(@RequestParam String keyword){
-        List<User> users = searchService.searchUsers(keyword);
+        List<String> users = searchService.searchUsername(keyword);
         return ResponseEntity.ok(users);
     }
 }

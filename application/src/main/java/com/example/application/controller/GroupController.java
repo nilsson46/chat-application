@@ -3,6 +3,7 @@ package com.example.application.controller;
 import com.example.application.model.Group;
 import com.example.application.service.AuthenticationService;
 import com.example.application.service.GroupService;
+import com.example.application.service.SearchService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +16,12 @@ public class GroupController {
     private final AuthenticationService authenticationService;
     private final GroupService groupService;
 
-    public GroupController(AuthenticationService authenticationService, GroupService groupService) {
+    private final SearchService searchService;
+
+    public GroupController(AuthenticationService authenticationService, GroupService groupService, SearchService searchService) {
         this.authenticationService = authenticationService;
         this.groupService = groupService;
+        this.searchService = searchService;
     }
 
     @PostMapping("/create")
@@ -34,7 +38,7 @@ public class GroupController {
 
     @GetMapping("/search")
     public ResponseEntity<?> searchGroups(@RequestParam String keyword){
-        List<Group> groups = groupService.searchGroups(keyword);
+        List<String> groups = searchService.searchGroupName(keyword);
         return ResponseEntity.ok(groups);
     }
     //Only in private groups
