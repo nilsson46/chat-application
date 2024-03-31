@@ -31,6 +31,12 @@ public class GroupController {
         groupService.deleteGroup(authenticationService.getLoggedInUsername(), groupName.getGroupName());
         return ResponseEntity.ok("Group deleted successfully");
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchGroups(@RequestParam String keyword){
+        List<Group> groups = groupService.searchGroups(keyword);
+        return ResponseEntity.ok(groups);
+    }
     //Only in private groups
     @PostMapping("/addMember")
     public void addMember(){

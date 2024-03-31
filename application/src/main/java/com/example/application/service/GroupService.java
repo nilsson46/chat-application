@@ -94,4 +94,8 @@ public class GroupService {
                 .map(Group::getGroupName)
                 .collect(Collectors.toList());
     }
+
+    public List<Group> searchGroups(String keyword) {
+        return groupRepository.findByGroupNameContaining(keyword);
+    }
 }
