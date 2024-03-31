@@ -33,9 +33,11 @@ public class AuthenticationService {
         if (userAlreadyExists(request.getUsername())) {
             throw new UserAlreadyExistsException("User already exists.");
         }
+        emailChecker(request.getEmail());
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setEmail(request.getEmail());
         user.setRole(request.getRole());
         user.setAge(request.getAge());
         user.setAddress(request.getAddress());
@@ -73,12 +75,17 @@ public class AuthenticationService {
             throw new InvalidInputException("Password is missing");
         }
     }
+    // Metod för att validera email
+    private void emailChecker(String email){
+        if(email == null || email.isEmpty()){
+            throw new InvalidInputException("Email is missing");
+        }
+    }
     public String getLoggedInUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
             return ((UserDetails) authentication.getPrincipal()).getUsername();
         }
-        // Returnera null om ingen användare är inloggad eller om autentiseringskontexten saknar användardetaljer
         return null;
     }
 }
