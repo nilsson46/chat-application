@@ -1,5 +1,6 @@
 package com.example.application.service;
 
+import com.example.application.exception.UserNotFoundException;
 import com.example.application.model.User;
 import com.example.application.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,13 @@ public class UserService {
     }
 
     public void updateUser(User user) {
-        userRepository.save(user);
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        existingUser.setUsername(user.getUsername());
+        existingUser.setPassword(user.getPassword());
+        existingUser.setEmail(user.getEmail());
+
+        userRepository.save(existingUser);
+
     }
 }
