@@ -76,8 +76,8 @@ public class GroupController {
     }
 
     @GetMapping("/members")
-    public void getMembers(){
-        // get members of group
+    public ResponseEntity<?> getMembers(@RequestBody Group group){
+        return ResponseEntity.ok(groupService.getMembersUsername(group.getGroupName()));
     }
 
     @GetMapping("/admins")
