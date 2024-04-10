@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -95,6 +96,13 @@ public class GroupService {
                 .collect(Collectors.toList());
     }
 
+    public List<String> getMembersUsername(String groupName) {
+        Group group = groupRepository.findByGroupName(groupName)
+                .orElseThrow(() -> new UserNotFoundException("Group with name " + groupName + " not found"));
+        return group.getGroupMembers().stream()
+                .map(User::getUsername)
+                .collect(Collectors.toList());
+    }
     public List<Group> searchGroups(String keyword) {
         return groupRepository.findByGroupNameContaining(keyword);
     }
