@@ -59,7 +59,14 @@ public class GroupService {
     public void addMember() {
     }
 
-    public void removeMember() {
+    public void removeMember(String groupName, String username) {
+        Group group = groupRepository.findByGroupName(groupName)
+                .orElseThrow(() -> new UserNotFoundException("Group with name " + groupName + " not found"));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User with username " + username + " not found"));
+        group.getMembers().remove(user);
+        groupRepository.save(group);
+
     }
 
     public void addAdmin() {

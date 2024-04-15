@@ -1,6 +1,7 @@
 package com.example.application.controller;
 
 import com.example.application.model.Group;
+import com.example.application.model.User;
 import com.example.application.service.AuthenticationService;
 import com.example.application.service.GroupService;
 import com.example.application.service.SearchService;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/group")
@@ -48,8 +50,11 @@ public class GroupController {
     }
     //Admin only
     @DeleteMapping("/removeMember")
-    public void removeMember(){
-        // remove member from group
+    public ResponseEntity<?> removeMember(@RequestBody Map<String, String> body){
+        String groupName = body.get("groupName");
+        String username = body.get("username");
+        groupService.removeMember(groupName, username);
+        return ResponseEntity.ok("Member removed successfully");
     }
 
     //Owner only or admin maybe?
