@@ -56,9 +56,6 @@ public class GroupService {
                     "User with username " + loggedInUsername + " is not the owner of the group");
         }
     }
-    public void addMember() {
-    }
-
     public void removeMember(String groupName, String username) {
         Group group = groupRepository.findByGroupName(groupName)
                 .orElseThrow(() -> new UserNotFoundException("Group with name " + groupName + " not found"));
@@ -110,6 +107,7 @@ public class GroupService {
                 .map(User::getUsername)
                 .collect(Collectors.toList());
     }
+
     public List<Group> searchGroups(String keyword) {
         return groupRepository.findByGroupNameContaining(keyword);
     }

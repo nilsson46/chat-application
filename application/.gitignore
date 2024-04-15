@@ -33,4 +33,4 @@ build/
 .vscode/
 database.yml
 
-secrets.yml
+application/src/main/resources/secrets.yml
