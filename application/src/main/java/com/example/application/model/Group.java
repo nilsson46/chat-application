@@ -32,7 +32,7 @@ public class Group {
     private String groupName;
 
     @Column(name = "private_group")
-    private boolean privateGroup;
+    private boolean isPrivate;
 
     public List<User> getMembers() {
         return groupMembers;

@@ -6,6 +6,8 @@ import com.example.application.model.Group;
 import com.example.application.model.User;
 import com.example.application.repository.GroupRepository;
 import com.example.application.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class GroupService {
+    private static final Logger logger = LoggerFactory.getLogger(GroupService.class);
     private UserRepository userRepository;
     private final GroupRepository groupRepository;
 
@@ -25,7 +28,7 @@ public class GroupService {
         this.groupRepository = groupRepository;
     }
     @Transactional
-    public void createGroup(String loggedInUsername, String groupName, boolean privateGroup) {
+    public void createGroup(String loggedInUsername, String groupName, boolean isPrivate) {
     User loggedInUser = userRepository.findByUsername(loggedInUsername).
             orElseThrow(() -> new UserNotFoundException("User with username " + loggedInUsername + "not found"));
 
@@ -35,7 +38,10 @@ public class GroupService {
         Group group = new Group();
         group.setGroupName(groupName);
         group.setGroupOwner((loggedInUsername));
-        group.setPrivateGroup(privateGroup);
+        group.setPrivate(isPrivate);
+
+        logger.info("Group before saving: {}", group.isPrivate());
+
 
         groupRepository.save(group);
 
@@ -110,5 +116,10 @@ public class GroupService {
 
     public List<Group> searchGroups(String keyword) {
         return groupRepository.findByGroupNameContaining(keyword);
+    }
+
+    public Group findGroupByName(String groupName) {
+        return groupRepository.findByGroupName(groupName)
+                .orElseThrow(() -> new UserNotFoundException("Group with name " + groupName + " not found"));
     }
 }
