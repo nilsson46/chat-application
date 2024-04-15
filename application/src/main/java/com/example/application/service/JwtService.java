@@ -1,23 +1,34 @@
 package com.example.application.service;
 
+
 import com.example.application.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoder;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.crypto.SecretKey;
+import java.io.InputStream;
 import java.util.Date;
+import java.util.Map;
 import java.util.function.Function;
 
 @Service
 public class JwtService {
 
-    private final String SECRET_KEY = "eddea6ac63add63bba07feac4c190c45084b8525ffc7ddd2d542ab15ad2f28c4";
+    private final String SECRET_KEY;
 
+    public JwtService() {
+        Yaml yaml = new Yaml();
+        InputStream inputStream = this.getClass()
+                .getClassLoader()
+                .getResourceAsStream("secrets.yml");
+        Map<String, String> obj = yaml.load(inputStream);
+        SECRET_KEY = obj.get("SECRET_KEY");
+    }
     public boolean isValid(String token, UserDetails user){
         String username = extractUsername(token);
         return (username.equals(user.getUsername())) && !isTokenExpired(token);
