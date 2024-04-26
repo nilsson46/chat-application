@@ -57,4 +57,8 @@ public class ChatController {
         String responseMessage = "Ansluten till chatten! Välkommen, " + username + "!";
         return ResponseEntity.ok(responseMessage);
     }
+    @GetMapping("/test-websocket")
+    public ResponseEntity<String> testWebSocket() {
+        return ResponseEntity.ok("WebSocket connection test successful!");
+    }
 }
