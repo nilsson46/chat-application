@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -24,25 +25,12 @@ public class ChatController {
 
     @Autowired
     private MessageService messageService;
-
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
     @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/public")
-    public ChatMessage sendMessageViaSocket(@Payload ChatMessage chatMessage) {
-        return chatMessage;
+    public void sendMessageViaSocket(@Payload ChatMessage chatMessage) {
+        messagingTemplate.convertAndSend("/topic/public", chatMessage);
     }
-
-    @PostMapping("/chat.sendMessage")
-    public ResponseEntity<ChatMessage> sendMessageViaPost(@RequestBody ChatMessage chatMessage) {
-        ChatMessage createdMessage = messageService.createMessage(chatMessage);
-        return ResponseEntity.ok(createdMessage);
-    }
-
-    @GetMapping("/chat.getMessages")
-    public ResponseEntity<List<ChatMessage>> getMessages() {
-        List<ChatMessage> messages = messageService.getMessages();
-        return ResponseEntity.ok(messages);
-    }
-
     @MessageMapping("/chat.addUser")
     @SendTo("/topic/public")
     public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {

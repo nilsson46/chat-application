@@ -17,20 +17,19 @@ public class WebSocketEventListener {
     //TODO -- add more event listeners
 
     private final SimpMessageSendingOperations messageTemplate;
-    @EventListener
-    public void handleWebSocketDisconnectListener(
-            SessionDisconnectEvent sessionDisconnectEvent
 
-    ){
+    @EventListener
+    public void handleWebSocketDisconnectListener(SessionDisconnectEvent sessionDisconnectEvent) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(sessionDisconnectEvent.getMessage());
-        String username = (String) headerAccessor.getSessionAttributes().get("username");
-        if(username != null){
-            log.info("User disconnected: {}", username);
-            var chatMessage = ChatMessage.builder()
-                    .type(MessageType.LEAVE)
-                    .sender(username)
-                    .build();
-            messageTemplate.convertAndSend("/topic/public",chatMessage);
-        }
+        String sessionId = headerAccessor.getSessionId();
+
+        // Skicka meddelande till alla klienter i samma session
+        var chatMessage = ChatMessage.builder()
+                .type(MessageType.LEAVE)
+                .sender("Server")
+                .content("En användare har lämnat chatten")
+                .build();
+        messageTemplate.convertAndSend("/topic/" + sessionId, chatMessage);
     }
 }
+

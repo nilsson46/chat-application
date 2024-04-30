@@ -41,7 +41,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/connect").permitAll()
+                        req->req.requestMatchers("/connect/**", "/test-websocket", "/websocket","/join/**").permitAll()
                                 .requestMatchers("/admin_only/**","/group/delete","/group/removeMember", "group/addAdmin").hasAuthority("GENERAL_ADMIN")
                                 .requestMatchers("/group/delete","/group/removeMember","group/addAdmin").hasAuthority("GROUP_ADMIN")
                                 .anyRequest()

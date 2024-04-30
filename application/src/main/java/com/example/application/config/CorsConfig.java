@@ -7,6 +7,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Configuration
 public class CorsConfig {
 
@@ -14,12 +17,10 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:8080");
-        config.addAllowedOrigin("ws://localhost:8080");
-        config.addAllowedOrigin("http://localhost:5173");
-        config.addAllowedOrigin("*"); // Allow requests from Vue.js frontend
+        config.setAllowedOrigins(List.of("http://localhost:5173","http://localhost:5174")); // Specify the exact origin
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
+        config.setAllowCredentials(true); // Allow credentials
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter((CorsConfigurationSource) source);
     }

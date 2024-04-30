@@ -1,11 +1,14 @@
 package com.example.application.controller;
 
+import com.example.application.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,6 +18,21 @@ import java.util.concurrent.Future;
 public class WebsocketController {
     @Autowired
     SimpMessagingTemplate simpMessagingTemplate;
+
+    @Autowired
+    private SessionManager sessionManager;
+
+    @MessageMapping("/join/{sessionId}")
+    public void joinSession(@DestinationVariable String sessionId, Principal principal) {
+        sessionManager.addUserToSession(sessionId, principal.getName());
+        // Implementera logik för att skicka bekräftelse eller meddelanden till användaren vid anslutning
+    }
+
+    @MessageMapping("/leave/{sessionId}")
+    public void leaveSession(@DestinationVariable String sessionId, Principal principal) {
+        sessionManager.removeUserFromSession(sessionId, principal.getName());
+        // Implementera logik för att skicka bekräftelse eller meddelanden till användaren vid frånkoppling
+    }
     String destination = "/topic/messages";
 
     ExecutorService executorService =
