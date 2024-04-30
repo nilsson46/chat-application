@@ -14,7 +14,6 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @RequiredArgsConstructor
 @Slf4j
 public class WebSocketEventListener {
-    //TODO -- add more event listeners
 
     private final SimpMessageSendingOperations messageTemplate;
 
@@ -22,7 +21,7 @@ public class WebSocketEventListener {
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent sessionDisconnectEvent) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(sessionDisconnectEvent.getMessage());
         String sessionId = headerAccessor.getSessionId();
-
+        log.warn("Användare ansluten: {}", sessionId);
         // Skicka meddelande till alla klienter i samma session
         var chatMessage = ChatMessage.builder()
                 .type(MessageType.LEAVE)
@@ -32,4 +31,3 @@ public class WebSocketEventListener {
         messageTemplate.convertAndSend("/topic/" + sessionId, chatMessage);
     }
 }
-

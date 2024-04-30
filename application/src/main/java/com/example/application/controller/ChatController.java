@@ -1,36 +1,38 @@
 package com.example.application.controller;
 
 import com.example.application.model.ChatMessage;
-import com.example.application.model.User;
-import com.example.application.service.MessageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Controller
+@Slf4j
 public class ChatController {
 
     @Autowired
-    private MessageService messageService;
-    @Autowired
     private SimpMessagingTemplate messagingTemplate;
-    @MessageMapping("/chat.sendMessage")
+
+    @MessageMapping("/chat/sendMessage")
+    @SendTo("/topic/public")
     public void sendMessageViaSocket(@Payload ChatMessage chatMessage) {
-        messagingTemplate.convertAndSend("/topic/public", chatMessage);
+        log.info("Received message: " + chatMessage.getContent()); // Lägger till loggning för att skriva ut meddelandet i konsollen
+        try {
+            messagingTemplate.convertAndSend("/topic/public", chatMessage);
+            log.info("Message sent to topic /topic/public");
+        } catch (Exception e) {
+            log.error("Error while sending message to topic /topic/public: " + e.getMessage());
+        }
     }
+
     @MessageMapping("/chat.addUser")
     @SendTo("/topic/public")
     public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
@@ -43,10 +45,13 @@ public class ChatController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         String responseMessage = "Ansluten till chatten! Välkommen, " + username + "!";
+        log.info(responseMessage); // Lägger till loggmeddelande när en användare ansluter till chatten
         return ResponseEntity.ok(responseMessage);
     }
+
     @GetMapping("/test-websocket")
     public ResponseEntity<String> testWebSocket() {
+        log.info("WebSocket connection test successful!"); // Lägger till loggmeddelande för att indikera att WebSocket-testet lyckades
         return ResponseEntity.ok("WebSocket connection test successful!");
     }
 }
