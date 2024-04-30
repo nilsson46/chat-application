@@ -8,6 +8,9 @@ spring:
     username: root
     password: 12345
     driver-class-name: com.mysql.jdbc.Driver
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,3 +21,6 @@ spring:
         format_sql: true
     database: MySQL
     database-platform: org.hibernate.dialect.MySQL8Dialect
+logging:
+  level:
+    root: DEBUG
