@@ -4,13 +4,13 @@ spring:
   config:
     location: classpath:/database.yml
   datasource:
-    url: jdbc:mysql://localhost:3306/chat_jwt
+    url: jdbc:mysql://localhost:3308/chat_jwt
     username: root
     password: 12345
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
 
     show-sql: true
     properties:
