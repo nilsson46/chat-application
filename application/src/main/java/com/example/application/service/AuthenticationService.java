@@ -75,6 +75,11 @@ public class AuthenticationService {
             throw new InvalidInputException("Password is missing");
         }
     }
+
+    /*public boolean validateToken(String token) {
+        UserDetails userDetails =  // retrieve user details based on the token
+        return jwtService.isValid(token, userDetails);
+    } */
     // Metod för att validera email
     private void emailChecker(String email){
         if(email == null || email.isEmpty()){
