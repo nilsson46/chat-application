@@ -61,12 +61,10 @@ public class AuthenticationService {
         return new AuthenticationResponse(token);
     }
 
-    // Metod för att kontrollera om en användare redan existerar i databasen
     private boolean userAlreadyExists(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
 
-    // Metod för att validera användaruppgifter (användarnamn och lösenord)
     private void validateUserCredentials(String username, String password) {
         if (username == null || username.isEmpty()) {
             throw new InvalidInputException("Username is missing");
@@ -80,7 +78,7 @@ public class AuthenticationService {
         UserDetails userDetails =  // retrieve user details based on the token
         return jwtService.isValid(token, userDetails);
     } */
-    // Metod för att validera email
+
     private void emailChecker(String email){
         if(email == null || email.isEmpty()){
             throw new InvalidInputException("Email is missing");
