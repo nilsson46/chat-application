@@ -10,9 +10,18 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    private final AuthHandshakeInterceptor authHandshakeInterceptor;
+
+    public WebSocketConfig(AuthHandshakeInterceptor authHandshakeInterceptor) {
+        this.authHandshakeInterceptor = authHandshakeInterceptor;
+    }
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/connect").setAllowedOriginPatterns("*").withSockJS().setSessionCookieNeeded(false);
+        registry.addEndpoint("/connect")
+                .setAllowedOriginPatterns("*")
+                .addInterceptors(authHandshakeInterceptor)
+                .withSockJS()
+                .setSessionCookieNeeded(false);
         System.out.println("Websocket connection established at: /connect");
     }
 

@@ -1,5 +1,6 @@
 package com.example.application.config;
 
+import com.example.application.exception.CustomAccessDeniedHandler;
 import com.example.application.filter.JwtAuthenticationFilter;
 import com.example.application.service.UserDetailsServiceImp;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 
 @Configuration
@@ -41,7 +40,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/connect/**", "/test-websocket", "/websocket","/join/**").permitAll() // Ändrat till att matcha frontendens slutpunkter
+                        req->req.requestMatchers("/test-websocket", "/websocket","/join/**","/register","/login","/connect/**").permitAll() // Ändrat till att matcha frontendens slutpunkter
                                 .requestMatchers("/admin_only/**","/group/delete","/group/removeMember", "group/addAdmin").hasAuthority("GENERAL_ADMIN")
                                 .requestMatchers("/group/delete","/group/removeMember","group/addAdmin").hasAuthority("GROUP_ADMIN")
                                 .anyRequest()
