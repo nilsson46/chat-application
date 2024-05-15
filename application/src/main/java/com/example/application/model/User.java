@@ -28,7 +28,6 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    //Optional so no checker needed
     @Column(name = "age")
     private Integer age;
 

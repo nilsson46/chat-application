@@ -1,6 +1,7 @@
 package com.example.application.controller;
 
 import com.example.application.model.ChatMessage;
+import com.example.application.repository.ChatMessageRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -21,6 +22,12 @@ public class ChatController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
+    private final ChatMessageRepository chatMessageRepository;
+
+    public ChatController(ChatMessageRepository chatMessageRepository) {
+        this.chatMessageRepository = chatMessageRepository;
+    }
+
     @MessageMapping("/chat/sendMessage")
     @SendTo("/topic/public")
     public void sendMessageViaSocket(@Payload ChatMessage chatMessage) {
@@ -28,6 +35,8 @@ public class ChatController {
         try {
             messagingTemplate.convertAndSend("/topic/public", chatMessage);
             log.info("Message sent to topic /topic/public");
+            chatMessageRepository.save(chatMessage);
+            log.info("Message saved to the database");
         } catch (Exception e) {
             log.error("Error while sending message to topic /topic/public: " + e.getMessage());
         }
