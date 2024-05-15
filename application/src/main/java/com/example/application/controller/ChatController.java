@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.List;
+
 @Controller
 @Slf4j
 public class ChatController {
@@ -48,7 +50,10 @@ public class ChatController {
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
         return chatMessage;
     }
-
+    @GetMapping("/api/messages")
+    public List<ChatMessage> getAllMessages() {
+        return chatMessageRepository.findAllByOrderByTimestampAsc();
+    }
     @GetMapping("/join-chat")
     public ResponseEntity<String> joinChat() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
