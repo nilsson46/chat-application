@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         req->req
-                                .requestMatchers("/test-websocket", "/websocket","/join/**","/register","/login","/connect/**", "/api/messages").permitAll() // Ändrat till att matcha frontendens slutpunkter
+                                .requestMatchers("/test-websocket", "/websocket","/join/**","/register","/login","/connect/**").permitAll() // Ändrat till att matcha frontendens slutpunkter
                                 .requestMatchers("/admin_only/**","/group/delete","/group/removeMember", "group/addAdmin").hasAuthority("GENERAL_ADMIN")
                                 .requestMatchers("/group/delete","/group/removeMember","group/addAdmin").hasAuthority("GROUP_ADMIN")
                                 .anyRequest()

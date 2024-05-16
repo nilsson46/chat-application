@@ -52,7 +52,7 @@ public class ChatController {
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
         return chatMessage;
     }
-    //@PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/api/messages")
     public List<ChatMessage> getAllMessages() {
         return chatMessageRepository.findAllByOrderByTimestampAsc();
