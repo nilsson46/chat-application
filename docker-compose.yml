@@ -3,8 +3,8 @@ services:
   db_mysql:
     image: mysql:8.1.0
     ports:
-      - "3308:3308"
+      - "3306:3306"
     restart: always
     environment:
       MYSQL_DATABASE: chat_jwt
-      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_ROOT_PASSWORD: citronsaft11
