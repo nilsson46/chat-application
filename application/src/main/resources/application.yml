@@ -20,3 +20,7 @@ spring:
         format_sql: true
     database: MySQL
     database-platform: org.hibernate.dialect.MySQL8Dialect
+logging:
+  level:
+    root: INFO
+

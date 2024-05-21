@@ -1,6 +1,7 @@
 package com.example.application.controller;
 
 import com.example.application.model.ChatMessage;
+import com.example.application.repository.ChatMessageRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -8,18 +9,28 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import java.util.List;
+
+@RestController
 @Slf4j
 public class ChatController {
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
+
+    private final ChatMessageRepository chatMessageRepository;
+
+    public ChatController(ChatMessageRepository chatMessageRepository) {
+        this.chatMessageRepository = chatMessageRepository;
+    }
 
     @MessageMapping("/chat/sendMessage")
     @SendTo("/topic/public")
@@ -28,6 +39,8 @@ public class ChatController {
         try {
             messagingTemplate.convertAndSend("/topic/public", chatMessage);
             log.info("Message sent to topic /topic/public");
+            chatMessageRepository.save(chatMessage);
+            log.info("Message saved to the database");
         } catch (Exception e) {
             log.error("Error while sending message to topic /topic/public: " + e.getMessage());
         }
@@ -39,7 +52,11 @@ public class ChatController {
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
         return chatMessage;
     }
-
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/api/messages")
+    public List<ChatMessage> getAllMessages() {
+        return chatMessageRepository.findAllByOrderByTimestampAsc();
+    }
     @GetMapping("/join-chat")
     public ResponseEntity<String> joinChat() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

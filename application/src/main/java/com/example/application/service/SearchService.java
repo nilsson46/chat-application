@@ -19,13 +19,10 @@ public class SearchService {
     private GroupRepository groupRepository;
 
     public List<String> searchUsername(String keyword) {
-        // Hämta alla grupper som innehåller sökordet i gruppnamnet
         List<User> users = userRepository.findByUsernameContaining(keyword);
 
-        // Skapa en lista för att lagra användarnamnen från grupperna
         List<String> usernames = new ArrayList<>();
 
-        // Loopa igenom varje grupp och hämta användarnamnen
         for (User user : users) {
             usernames.add(user.getUsername());
         }
@@ -34,13 +31,13 @@ public class SearchService {
     }
 
     public List<String> searchGroupName(String keyword) {
-        // Hämta alla grupper som innehåller sökordet i gruppnamnet
+
         List<Group> groups = groupRepository.findByGroupNameContaining(keyword);
 
-        // Skapa en lista för att lagra användarnamnen från grupperna
+
         List<String> groupArray = new ArrayList<>();
 
-        // Loopa igenom varje grupp och hämta användarnamnen
+
         for (Group group : groups) {
             groupArray.add(group.getGroupName());
         }
