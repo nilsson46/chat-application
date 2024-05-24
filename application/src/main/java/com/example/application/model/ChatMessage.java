@@ -1,9 +1,8 @@
 package com.example.application.model;
 
-
-//Should change folder later on.
-
 import com.example.application.model.MessageType;
+import com.example.application.model.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,21 +15,20 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
 public class ChatMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long chatId;
-
-
-    //private String groupName;
+    private Long id;
 
     @Column(name = "content")
     private String content;
 
     @Column(name = "sender")
     private String sender;
+
+    @Column(name = "receiver")
+    private String receiver;
 
     @Column(name = "type")
     private MessageType type;
@@ -39,4 +37,8 @@ public class ChatMessage {
     private String timestamp;
 
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "chat_id", nullable = false)
+    @JsonBackReference
+    private Chat chat;
 }

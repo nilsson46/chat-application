@@ -50,7 +50,10 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "receiver")
+    @ManyToMany(mappedBy = "users")
+    private List<Chat> chats;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "receiver")
     @Column(name="friends")
     private List<Friendship> friendships;
 

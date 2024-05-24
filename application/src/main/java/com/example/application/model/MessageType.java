@@ -2,8 +2,12 @@ package com.example.application.model;
 
 public enum MessageType {
 
-    CHAT,
+    /*CHAT,
     JOIN,
 
-    LEAVE
+    LEAVE */
+
+    PUBLIC,
+    PRIVATE,
+    GROUP
 }
