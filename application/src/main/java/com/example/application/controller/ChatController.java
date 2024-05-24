@@ -2,6 +2,7 @@ package com.example.application.controller;
 
 import com.example.application.model.Chat;
 import com.example.application.model.ChatMessage;
+import com.example.application.model.MessageType;
 import com.example.application.repository.ChatMessageRepository;
 import com.example.application.repository.UserRepository;
 import com.example.application.service.ChatService;
@@ -52,7 +53,7 @@ public class ChatController {
             // Send the message to the public topic
             messagingTemplate.convertAndSend("/topic/public", chatMessage);
             log.info("Message sent to topic /topic/public");
-
+            chatMessage.setType(MessageType.PUBLIC);
             // Set the Chat object for the ChatMessage
             Chat chat = chatService.createPublicChat(chatMessage.getSender());
             chatMessage.setChat(chat);
@@ -78,7 +79,7 @@ public class ChatController {
         try {
             // Check if a chat exists between the sender and the receiver
             Chat chat = chatService.createChat(chatMessage.getSender(), recipientUsername);
-
+            chatMessage.setType(MessageType.PRIVATE);
             // Associate the message with the chat
             chatMessage.setChat(chat);
 

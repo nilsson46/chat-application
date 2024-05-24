@@ -30,7 +30,7 @@ public class WebSocketEventListener {
         log.warn("Användare ansluten: {}", username);
         if (user.isPresent()) {
             var chatMessage = ChatMessage.builder()
-                    .type(MessageType.LEAVE)
+                    //.type(MessageType.LEAVE)
                     .sender(user.get().getUsername())
                     .content("En användare har lämnat chatten")
                     .build();
