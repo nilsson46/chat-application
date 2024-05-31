@@ -57,7 +57,6 @@ public class User implements UserDetails {
     @Column(name="friends")
     private List<Friendship> friendships;
 
-    //SPRING USERDETAILS
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

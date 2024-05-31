@@ -18,7 +18,7 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
+    //TODO doesnt work for now
     @ManyToMany
     @JoinTable(
             name = "chat_user",

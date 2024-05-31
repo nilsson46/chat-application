@@ -26,5 +26,4 @@ public class Friendship {
     @Enumerated(EnumType.STRING)
     private FriendshipStatus status;
 
-    // Konstruktor, getters och setters
 }
