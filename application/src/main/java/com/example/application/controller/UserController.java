@@ -2,16 +2,16 @@ package com.example.application.controller;
 
 import com.example.application.exception.UserNotFoundException;
 import com.example.application.model.User;
+import com.example.application.repository.UserRepository;
 import com.example.application.service.AuthenticationService;
 import com.example.application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -20,6 +20,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private AuthenticationService authenticationService;
+    @Autowired
+    private UserRepository userRepository;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -45,4 +47,13 @@ public class UserController {
             return ResponseEntity.badRequest().body("User update failed");
         }
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllUsers(){
+        List<String> usernames = userRepository.findAll().stream()
+                .map(User::getUsername)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(usernames);
+    }
+
 }

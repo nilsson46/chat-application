@@ -37,12 +37,12 @@ public class AuthHandshakeInterceptor implements HandshakeInterceptor {
     }
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-        // Extract token from query parameters
+
         String token = request.getURI().getQuery();
         logger.info("Token: {}", token);
         System.out.println("Token: " + token);
 
-        // Validate token and set authenticated user
+
         if (token != null) {
             String username = jwtService.extractUsername(token);
             logger.info("Username: {}", username);
