@@ -12,6 +12,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Component
@@ -25,16 +26,18 @@ public class WebSocketEventListener {
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent sessionDisconnectEvent) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(sessionDisconnectEvent.getMessage());
-        String username = headerAccessor.getUser().getName();
-        Optional<User> user = userRepository.findByUsername(username);
-        log.warn("Användare ansluten: {}", username);
-        if (user.isPresent()) {
-            var chatMessage = ChatMessage.builder()
-                    //.type(MessageType.LEAVE)
-                    .sender(user.get().getUsername())
-                    .content("En användare har lämnat chatten")
-                    .build();
-            messageTemplate.convertAndSend("/topic/public", chatMessage);
+        Principal principal = headerAccessor.getUser();
+        if (principal != null) {
+            String username = principal.getName();
+            Optional<User> user = userRepository.findByUsername(username);
+            log.warn("Användare ansluten: {}", username);
+            if (user.isPresent()) {
+                var chatMessage = ChatMessage.builder()
+                        .sender(user.get().getUsername())
+                        .content("En användare har lämnat chatten")
+                        .build();
+                messageTemplate.convertAndSend("/topic/public", chatMessage);
+            }
         }
     }
 }

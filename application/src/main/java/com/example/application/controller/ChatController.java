@@ -50,11 +50,11 @@ public class ChatController {
     public void sendMessageViaSocket(@Payload ChatMessage chatMessage) {
         log.info("Received message: " + chatMessage.getContent());
         try {
-            // Send the message to the public topic
+
             messagingTemplate.convertAndSend("/topic/public", chatMessage);
             log.info("Message sent to topic /topic/public");
             chatMessage.setType(MessageType.PUBLIC);
-            // Set the Chat object for the ChatMessage
+
             Chat chat = chatService.createPublicChat(chatMessage.getSender());
             chatMessage.setChat(chat);
 
@@ -77,13 +77,12 @@ public class ChatController {
         String recipientUsername = chatMessage.getReceiver();
         System.out.println("Recipient: " + recipientUsername);
         try {
-            // Check if a chat exists between the sender and the receiver
+
             Chat chat = chatService.createChat(chatMessage.getSender(), recipientUsername);
             chatMessage.setType(MessageType.PRIVATE);
-            // Associate the message with the chat
+
             chatMessage.setChat(chat);
 
-            // Construct the topic name using the receiver's username
             String topic = "/topic/private/" + recipientUsername;
             messagingTemplate.convertAndSend(topic, chatMessage);
             log.info("Message sent to topic " + topic);
@@ -95,10 +94,8 @@ public class ChatController {
     }
     @SubscribeMapping("/topic/private/{recipientUsername}/{senderUsername}")
     public void subscribeToPrivateTopic(@DestinationVariable String recipientUsername, SimpMessageHeaderAccessor headerAccessor) {
-        String currentUsername = getCurrentUsername(); // Implement this method to get the current user's username
+        String currentUsername = getCurrentUsername();
         if (currentUsername.equals(recipientUsername)) {
-            // The current user is the recipient of the message
-            // Process the message here
             System.out.println("Message received for " + currentUsername);
         }
     }
@@ -113,13 +110,13 @@ public class ChatController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         String responseMessage = "Ansluten till chatten! Välkommen, " + username + "!";
-        log.info(responseMessage); // Lägger till loggmeddelande när en användare ansluter till chatten
+        log.info(responseMessage);
         return ResponseEntity.ok(responseMessage);
     }
 
     @GetMapping("/test-websocket")
     public ResponseEntity<String> testWebSocket() {
-        log.info("WebSocket connection test successful!"); // Lägger till loggmeddelande för att indikera att WebSocket-testet lyckades
+        log.info("WebSocket connection test successful!");
         return ResponseEntity.ok("WebSocket connection test successful!");
     }
 }
