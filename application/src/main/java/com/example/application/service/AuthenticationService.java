@@ -27,7 +27,6 @@ public class AuthenticationService {
         this.jwtService = jwtService;
     }
 
-    // Metod för att registrera en ny användare
     public AuthenticationResponse register(User request) {
         validateUserCredentials(request.getUsername(), request.getPassword());
         if (userAlreadyExists(request.getUsername())) {
@@ -51,7 +50,6 @@ public class AuthenticationService {
         return new AuthenticationResponse(token);
     }
 
-    // Metod för att autentisera en användare
     public AuthenticationResponse authenticate(User request) {
         validateUserCredentials(request.getUsername(), request.getPassword());
         User user = userRepository.findByUsername(request.getUsername())
@@ -74,10 +72,6 @@ public class AuthenticationService {
         }
     }
 
-    /*public boolean validateToken(String token) {
-        UserDetails userDetails =  // retrieve user details based on the token
-        return jwtService.isValid(token, userDetails);
-    } */
 
     private void emailChecker(String email){
         if(email == null || email.isEmpty()){
